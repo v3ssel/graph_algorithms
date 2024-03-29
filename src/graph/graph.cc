@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "s21_graph.h"
+#include "graph.h"
 
 namespace s21 {
     Graph::Graph() {

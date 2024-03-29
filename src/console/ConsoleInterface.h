@@ -2,7 +2,7 @@
 #define _CONSOLEINTERFACE_H_
 
 #include <memory>
-#include "../graph/s21_graph.h"
+#include "../graph/graph.h"
 
 namespace s21 {
     class ConsoleInterface {

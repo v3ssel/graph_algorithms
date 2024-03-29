@@ -1,10 +1,10 @@
-#ifndef _S21_GRAPH_ALGORITHMS_H_
-#define _S21_GRAPH_ALGORITHMS_H_
+#ifndef _GRAPH_ALGORITHMS_H_
+#define _GRAPH_ALGORITHMS_H_
 
 #include <vector>
 
 #include "TSM/TravelingSalesman.h"
-#include "s21_graph.h"
+#include "graph.h"
 
 namespace s21 {
     class GraphAlgorithms {
@@ -25,4 +25,4 @@ namespace s21 {
 } // namespace s21
 
 
-#endif  // _S21_GRAPH_ALGORITHMS_H_
+#endif  // _GRAPH_ALGORITHMS_H_

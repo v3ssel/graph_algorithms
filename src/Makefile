@@ -7,8 +7,8 @@ ifeq ($(shell uname), Darwin)
 endif
 
 
-.PHONY: tests s21_graph.a s21_graph_algorithms.a
-all: s21_graph.a s21_graph_algorithms.a install tests clean
+.PHONY: tests graph.a graph_algorithms.a
+all: graph.a graph_algorithms.a install tests clean
 
 
 install:
@@ -16,14 +16,14 @@ install:
 	cmake --build $(BUILDDIR) --target GraphApplication --config=Release
 
 
-s21_graph.a:
+graph.a:
 	cmake . -G "Unix Makefiles" -B $(BUILDDIR) && \
-	cmake --build $(BUILDDIR) --target s21_graph --config=Release
+	cmake --build $(BUILDDIR) --target graph --config=Release
 
 
-s21_graph_algorithms.a:
+graph_algorithms.a:
 	cmake . -G "Unix Makefiles" -B $(BUILDDIR) && \
-	cmake --build $(BUILDDIR) --target s21_graph_algorithms --config=Release
+	cmake --build $(BUILDDIR) --target graph_algorithms --config=Release
 
 
 tests:

@@ -20,8 +20,8 @@ set(TEST_SOURCES
 add_executable(${PROJECT_NAME} ${TEST_SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-    s21_graph
-    s21_graph_algorithms
+    graph
+    graph_algorithms
     ${GTEST_LIBRARIES}
 )
 

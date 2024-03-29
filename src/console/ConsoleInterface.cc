@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <future>
 
-#include "../graph/s21_graph_algorithms.h"
+#include "../graph/graph_algorithms.h"
 #include "ConsoleInterface.h"
 
 #include "../graph/TSM/AntColonyTSM.h"

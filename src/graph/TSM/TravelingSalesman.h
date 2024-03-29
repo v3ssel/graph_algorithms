@@ -4,7 +4,7 @@
 #include <vector>
 #include <limits>
 
-#include "../s21_graph.h"
+#include "../graph.h"
 
 namespace s21 {
     class TravelingSalesman {

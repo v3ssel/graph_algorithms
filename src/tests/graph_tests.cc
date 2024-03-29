@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <filesystem>
 
-#include "../graph/s21_graph.h"
+#include "../graph/graph.h"
 
 TEST(Graph, LoadGraphFromFile) {
     std::string test_graph_path = (std::filesystem::current_path() / "assets" / "graph.txt").string();

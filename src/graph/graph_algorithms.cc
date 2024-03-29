@@ -5,7 +5,7 @@
 #include "../containers/stack.h"
 #include "../containers/queue.h"
 
-#include "s21_graph_algorithms.h"
+#include "graph_algorithms.h"
 
 namespace s21 {
     std::vector<int> GraphAlgorithms::DepthFirstSearch(const Graph &graph, int start_vertex) {

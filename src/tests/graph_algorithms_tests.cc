@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <gtest/gtest.h>
-#include "../graph/s21_graph_algorithms.h"
 
+#include "../graph/graph_algorithms.h"
 #include "../graph/TSM/AntColonyTSM.h"
 #include "../graph/TSM/GeneticTSM.h"
 #include "../graph/TSM/BranchesAndBoundsTSM.h"
