@@ -20,22 +20,24 @@ namespace s21 {
        private:
         enum class InterfaceOption {
             EXIT = -1,
-            MENU = 0,
-            LOAD_GRAPH = 1,
-            EXPORT_GRAPH = 2,
-            DFS = 3,
-            BFS = 4,
-            DIJKSTRA = 5,
-            FLOYD_WARSHALL = 6,
-            PRIM = 7,
-            ANT_COLONY = 8,
-            BRANCHES_AND_BOUNDS = 9,
-            GENETIC = 10,
-            TSM_RESEARCH = 11
+            MENU,
+            LOAD_GRAPH,
+            EXPORT_GRAPH_DOT,
+            EXPORT_GRAPH_ADJ,
+            DFS,
+            BFS,
+            DIJKSTRA,
+            FLOYD_WARSHALL,
+            PRIM,
+            ANT_COLONY,
+            BRANCHES_AND_BOUNDS,
+            GENETIC,
+            TSM_RESEARCH
         } option_;
         
         void loadGraph();
-        void exportGraph();
+        void exportGraphDot();
+        void exportGraphAdj();
         void dfs();
         void bfs();
         void dijkstra();

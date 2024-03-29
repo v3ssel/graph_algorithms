@@ -5,6 +5,31 @@
 #include "s21_graph.h"
 
 namespace s21 {
+    Graph::Graph() {
+        size_ = 0;
+        adj_matrix_.clear();
+    }
+
+    Graph::Graph(const std::vector<std::vector<int>> &matrix) {
+        size_ = matrix.size();
+        adj_matrix_ = matrix;
+    }
+
+    Graph::Graph(const Graph &other) {
+        size_ = other.size_;
+        adj_matrix_ = other.adj_matrix_;
+    }
+
+    Graph::Graph(Graph &&other) {
+        size_ = other.size_;
+        adj_matrix_ = std::move(other.adj_matrix_);
+    }
+
+    Graph::~Graph() {
+        size_ = 0;
+        adj_matrix_.clear();
+    }
+
     void Graph::LoadGraphFromFile(const std::string &filename) {
         std::ifstream file(filename);
 
@@ -36,6 +61,18 @@ namespace s21 {
 
         std::ofstream file(filename);
         file << ss.str();
+    }
+
+    void Graph::ExportGraphAdjMatrix(const std::string &filename) const {
+        std::ofstream file(filename);
+        file << size_ << "\n";
+        
+        for (size_t i = 0; i < size_; ++i) {
+            for (size_t j = 0; j < size_; ++j) {
+                file << adj_matrix_[i][j] << " ";
+            }
+            file << "\n";
+        }
     }
 
     bool Graph::IsWayExists(const int from, const int to) const {

@@ -7,8 +7,15 @@
 namespace s21 {
     class Graph {
        public:
+        Graph();
+        Graph(const std::vector<std::vector<int>>& matrix);
+        Graph(const Graph& other);
+        Graph(Graph&& other);
+        ~Graph();
+
         void LoadGraphFromFile(const std::string& filename);
         void ExportGraphToDot(const std::string& filename) const;
+        void ExportGraphAdjMatrix(const std::string& filename) const;
 
         bool IsWayExists(const int from, const int to) const;
         bool IsVertexExist(const int vertex) const;

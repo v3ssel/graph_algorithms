@@ -2,6 +2,10 @@
 #include <gtest/gtest.h>
 #include "../graph/s21_graph_algorithms.h"
 
+#include "../graph/TSM/AntColonyTSM.h"
+#include "../graph/TSM/GeneticTSM.h"
+#include "../graph/TSM/BranchesAndBoundsTSM.h"
+
 TEST(GraphAlgorithms, DepthFirstSearch) {
     std::string test_graph_path = (std::filesystem::current_path() / "assets" / "dfs-graph.txt").string();
 
@@ -30,7 +34,7 @@ TEST(GraphAlgorithms, GetShortestPathBetweenVertices_Dijkstra) {
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
 
-    int dijkstra_result = s21::GraphAlgorithms::GetShortestPathBetweenVertices(graph, 1, 5);
+    int dijkstra_result = s21::GraphAlgorithms::GetShortestPathBetweenVertices_DijkstraAlg(graph, 1, 5);
     EXPECT_EQ(dijkstra_result, 20);
 }
 
@@ -40,7 +44,7 @@ TEST(GraphAlgorithms, GetShortestPathsBetweenAllVertices_FloydWarshall) {
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
 
-    auto result = s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(graph);
+    auto result = s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices_FloydWarshallAlg(graph);
 
     EXPECT_EQ(result.size(), 4);
     EXPECT_TRUE((result[0] == std::vector<int>{ 0, -1, -2, 0}));
@@ -55,7 +59,7 @@ TEST(GraphAlgorithms, GetLeastSpanningTree_Prim) {
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
 
-    auto result = s21::GraphAlgorithms::GetLeastSpanningTree(graph);
+    auto result = s21::GraphAlgorithms::GetLeastSpanningTree_PrimAlg(graph);
     
     EXPECT_EQ(result.size(), 5);
     EXPECT_TRUE((result[0] == std::vector<int>{ 0, 3, 4, 0, 1}));
@@ -70,8 +74,9 @@ TEST(GraphAlgorithmsTSM, AntColony) {
 
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
-
-    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(graph);
+    
+    s21::AntColonyTSM tsm;
+    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(graph, &tsm);
     
     std::set<int> path;
     for (int vertex : result.vertices) {
@@ -89,7 +94,8 @@ TEST(GraphAlgorithmsTSM, Genetic) {
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
 
-    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemGenetic(graph);
+    s21::GeneticTSM tsm;
+    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(graph, &tsm);
     
     std::set<int> path;
     for (int vertex : result.vertices) {
@@ -107,7 +113,8 @@ TEST(GraphAlgorithmsTSM, BranchesAndBounds_First) {
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
 
-    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemGenetic(graph);
+    s21::BranchesAndBoundsTSM tsm;
+    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(graph, &tsm);
     
     std::set<int> path;
     for (int vertex : result.vertices) {
@@ -125,7 +132,8 @@ TEST(GraphAlgorithmsTSM, BranchesAndBounds_Second) {
     s21::Graph graph;
     graph.LoadGraphFromFile(test_graph_path);
 
-    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemGenetic(graph);
+    s21::BranchesAndBoundsTSM tsm;
+    auto result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(graph, &tsm);
     
     std::set<int> path;
     for (int vertex : result.vertices) {

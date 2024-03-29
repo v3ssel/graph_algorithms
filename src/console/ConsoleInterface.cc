@@ -7,6 +7,10 @@
 #include "../graph/s21_graph_algorithms.h"
 #include "ConsoleInterface.h"
 
+#include "../graph/TSM/AntColonyTSM.h"
+#include "../graph/TSM/GeneticTSM.h"
+#include "../graph/TSM/BranchesAndBoundsTSM.h"
+
 namespace s21 {
     void ConsoleInterface::run() {
         helloMsg();
@@ -34,19 +38,20 @@ namespace s21 {
         system("clear");
         std::cout << "[MENU]" << std::endl;
         std::cout << "\nAvailable options:" << std::endl;
-        std::cout << "1. Load other graph." << std::endl;
-        std::cout << "2. Export the graph to the DOT format." << std::endl;
-        std::cout << "3. Depth First Search way of graph." << std::endl;
-        std::cout << "4. Breadth First Search way of graph." << std::endl;
-        std::cout << "5. Dijkstra's algorithm for finding shortest path." << std::endl;
-        std::cout << "6. Floyd-Warshall algorithm for finding shortest paths between all combinations." << std::endl;
-        std::cout << "7. Prim's algorithm for finding least spanning tree of graph." << std::endl;
-        std::cout << "8. Ant-Colony algorithm for solving the Traveling Salesman Problem." << std::endl;
-        std::cout << "9. Branches And Bounds algorithm for solving the Traveling Salesman Problem." << std::endl;
-        std::cout << "10. Genetic algorithm for solving the Traveling Salesman Problem." << std::endl;
-        std::cout << "11. Research between Traveling Salesman Problem solving algorithms." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::LOAD_GRAPH)          << ". Load other graph." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::EXPORT_GRAPH_DOT)    << ". Export the graph to the DOT format." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::EXPORT_GRAPH_ADJ)    << ". Export the graph as adjacency matrix." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::DFS)                 << ". Depth First Search way of graph." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::BFS)                 << ". Breadth First Search way of graph." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::DIJKSTRA)            << ". Dijkstra's algorithm for finding shortest path." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::FLOYD_WARSHALL)      << ". Floyd-Warshall algorithm for finding shortest paths between all combinations." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::PRIM)                << ". Prim's algorithm for finding least spanning tree of graph." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::ANT_COLONY)          << ". Ant-Colony algorithm for solving the Traveling Salesman Problem." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::BRANCHES_AND_BOUNDS) << ". Branches And Bounds algorithm for solving the Traveling Salesman Problem." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::GENETIC)             << ". Genetic algorithm for solving the Traveling Salesman Problem." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::TSM_RESEARCH)        << ". Research between Traveling Salesman Problem solving algorithms." << std::endl;
 
-        std::cout << "-1. Exit." << std::endl;
+        std::cout << static_cast<int>(InterfaceOption::EXIT) << ". Exit." << std::endl;
 
         std::cout << "Please select an option." << std::endl;
         while ((option_ < InterfaceOption::LOAD_GRAPH || option_ > InterfaceOption::TSM_RESEARCH) && option_ != InterfaceOption::EXIT) {
@@ -76,9 +81,14 @@ namespace s21 {
                 loadGraph();
                 break;
 
-            case InterfaceOption::EXPORT_GRAPH:
+            case InterfaceOption::EXPORT_GRAPH_DOT:
                 system("clear");
-                exportGraph();
+                exportGraphDot();
+                break;
+
+            case InterfaceOption::EXPORT_GRAPH_ADJ:
+                system("clear");
+                exportGraphAdj();
                 break;
 
             case InterfaceOption::DFS:
@@ -167,9 +177,9 @@ namespace s21 {
         wait();
     }
 
-    void ConsoleInterface::exportGraph() {
+    void ConsoleInterface::exportGraphDot() {
         system("clear");
-        std::cout << "\n[EXPORTING GRAPH]" << std::endl;
+        std::cout << "\n[EXPORTING GRAPH IN DOT FORMAT]" << std::endl;
         std::cout << "Please enter a path to file." << std::endl;
 
         std::string path;
@@ -177,6 +187,25 @@ namespace s21 {
 
         try {
             graph_->ExportGraphToDot(path);
+            std::cout << "[SUCCESS] Graph exported successfully." << std::endl;
+
+        } catch (std::exception &e) {
+            std::cout << "[FAIL] An error occured: " << e.what() << std::endl;
+            std::cout << "[FAIL] Graph has not been exported." << std::endl;
+        }
+        wait();
+    }
+
+    void ConsoleInterface::exportGraphAdj() {
+        system("clear");
+        std::cout << "\n[EXPORTING GRAPH AS ADJACENCY MATRIX]" << std::endl;
+        std::cout << "Please enter a path to file." << std::endl;
+
+        std::string path;
+        std::cin >> path;
+
+        try {
+            graph_->ExportGraphAdjMatrix(path);
             std::cout << "[SUCCESS] Graph exported successfully." << std::endl;
 
         } catch (std::exception &e) {
@@ -238,7 +267,7 @@ namespace s21 {
         if (end_vertex == -1) return;
 
         try {
-            int cost = s21::GraphAlgorithms::GetShortestPathBetweenVertices(*graph_, start_vertex, end_vertex);
+            int cost = s21::GraphAlgorithms::GetShortestPathBetweenVertices_DijkstraAlg(*graph_, start_vertex, end_vertex);
             std::cout << "[SUCCESS] Finding shortest path between vertices " << start_vertex << " and " << end_vertex << " completed successfully." << std::endl;
             std::cout << "Shortest way will cost: " << cost << std::endl;
 
@@ -254,7 +283,7 @@ namespace s21 {
         std::cout << "[FOR FINDING SHORTEST PATH BETWEEN ALL VERTICES COMBINATIONS]" << std::endl;
 
         try {
-            auto costs = s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(*graph_);
+            auto costs = s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices_FloydWarshallAlg(*graph_);
             std::cout << "[SUCCESS] Finding shortest path between all vertices completed successfully." << std::endl;
             std::cout << "Adjacency matrix of shortest ways: " << std::endl;
             printAdjacencyMatrix(costs);
@@ -271,7 +300,7 @@ namespace s21 {
         std::cout << "[FOR FINDING MINIMAL SPANNING TREE IN THE GRAPH]" << std::endl;
 
         try {
-            auto costs = s21::GraphAlgorithms::GetLeastSpanningTree(*graph_);
+            auto costs = s21::GraphAlgorithms::GetLeastSpanningTree_PrimAlg(*graph_);
             std::cout << "[SUCCESS] Finding minimal spanning tree completed successfully." << std::endl;
             std::cout << "Adjacency matrix of spanning tree: " << std::endl;
             printAdjacencyMatrix(costs);
@@ -288,7 +317,9 @@ namespace s21 {
         std::cout << "[FOR SOLVING TRAVELING SALESMAN PROBLEM]" << std::endl;
 
         try {
-            auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_);
+            AntColonyTSM tsm;
+            auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_, &tsm);
+
             std::cout << "[SUCCESS] Solving TSM completed successfully." << std::endl;
             std::cout << "Total TSM distance: " << tsm_result.distance << "." << std::endl;
             std::cout << "Way of TSM: " << std::endl;
@@ -306,7 +337,9 @@ namespace s21 {
         std::cout << "[FOR SOLVING TRAVELING SALESMAN PROBLEM]" << std::endl;
 
         try {
-            auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemBranchesAndBounds(*graph_);
+            BranchesAndBoundsTSM tsm;
+            auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_, &tsm);
+            
             std::cout << "[SUCCESS] Solving TSM completed successfully." << std::endl;
             std::cout << "Total TSM distance: " << tsm_result.distance << "." << std::endl;
             std::cout << "Way of TSM: " << std::endl;
@@ -324,7 +357,9 @@ namespace s21 {
         std::cout << "[FOR SOLVING TRAVELING SALESMAN PROBLEM]" << std::endl;
 
         try {
-            auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemGenetic(*graph_);
+            GeneticTSM tsm;
+            auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_, &tsm);
+            
             std::cout << "[SUCCESS] Solving TSM completed successfully." << std::endl;
             std::cout << "Total TSM distance: " << tsm_result.distance << "." << std::endl;
             std::cout << "Way of TSM: " << std::endl;
@@ -346,8 +381,9 @@ namespace s21 {
 
         try {
             size_t N;
-            std::cin >> N;
             while (true) {
+                std::cin >> N;
+                
                 if (std::cin.fail()) {
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -362,31 +398,34 @@ namespace s21 {
             auto ants_ft = std::async([N, this]() {
                 auto start = std::chrono::high_resolution_clock().now().time_since_epoch();
                 for (size_t i = 0; i < N; i++) {
-                    auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_);
+                    AntColonyTSM tsm;
+                    auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_, &tsm);
                 }
                 auto end = std::chrono::high_resolution_clock().now().time_since_epoch();
 
-                return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000;
+                return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.0;
             });
 
             auto genetic_ft = std::async([N, this]() {
                 auto start = std::chrono::high_resolution_clock().now().time_since_epoch();
                 for (size_t i = 0; i < N; i++) {
-                    auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemGenetic(*graph_);
+                    GeneticTSM tsm;
+                    auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_, &tsm);
                 }
                 auto end = std::chrono::high_resolution_clock().now().time_since_epoch();
 
-                return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000;
+                return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.0;
             });
 
             auto bnb_ft = std::async([N, this]() {
                 auto start = std::chrono::high_resolution_clock().now().time_since_epoch();
                 for (size_t i = 0; i < N; i++) {
-                    auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblemBranchesAndBounds(*graph_);
+                    BranchesAndBoundsTSM tsm;
+                    auto tsm_result = s21::GraphAlgorithms::SolveTravelingSalesmanProblem(*graph_, &tsm);
                 }
                 auto end = std::chrono::high_resolution_clock().now().time_since_epoch();
 
-                return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000;
+                return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.0;
             });
 
             std::cout << "Total time taken by ant colony algorithm: "

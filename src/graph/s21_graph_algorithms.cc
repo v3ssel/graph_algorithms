@@ -5,10 +5,6 @@
 #include "../containers/stack.h"
 #include "../containers/queue.h"
 
-#include "TSM/AntColonyTSM.h"
-#include "TSM/GeneticTSM.h"
-#include "TSM/BranchesAndBoundsTSM.h"
-
 #include "s21_graph_algorithms.h"
 
 namespace s21 {
@@ -72,11 +68,11 @@ namespace s21 {
         return result;
     }
     
-    int GraphAlgorithms::GetShortestPathBetweenVertices(const Graph &graph, int vertex1, int vertex2) {
+    int GraphAlgorithms::GetShortestPathBetweenVertices_DijkstraAlg(const Graph &graph, int vertex1, int vertex2) {
         if (graph.size() == 0) return 0;
         
-        CheckVertex(graph, vertex1, "GraphAlgorithms::GetShortestPathBetweenVertices(): Invalid vertex1.");
-        CheckVertex(graph, vertex2, "GraphAlgorithms::GetShortestPathBetweenVertices(): Invalid vertex2.");
+        CheckVertex(graph, vertex1, "GraphAlgorithms::GetShortestPathBetweenVertices_DijkstraAlg(): Invalid vertex1.");
+        CheckVertex(graph, vertex2, "GraphAlgorithms::GetShortestPathBetweenVertices_DijkstraAlg(): Invalid vertex2.");
         
         std::vector<int> dist(graph.size(), std::numeric_limits<int>::max());
         std::vector<bool> visited(graph.size(), false);
@@ -104,7 +100,7 @@ namespace s21 {
         return dist[vertex2 - 1];
     }
     
-    std::vector<std::vector<int>> GraphAlgorithms::GetShortestPathsBetweenAllVertices(const Graph &graph) {
+    std::vector<std::vector<int>> GraphAlgorithms::GetShortestPathsBetweenAllVertices_FloydWarshallAlg(const Graph &graph) {
         std::vector<std::vector<int>> dist(graph.size(), std::vector<int>(graph.size(), 0));
 
         for (size_t u = 0; u < graph.size(); u++) {
@@ -129,7 +125,7 @@ namespace s21 {
         return dist;
     }
     
-    std::vector<std::vector<int>> GraphAlgorithms::GetLeastSpanningTree(const Graph &graph) {
+    std::vector<std::vector<int>> GraphAlgorithms::GetLeastSpanningTree_PrimAlg(const Graph &graph) {
         std::vector<std::vector<int>> forest(graph.size(), std::vector<int>(graph.size(), 0));
         
         std::vector<int> parent(graph.size(), -1);
@@ -168,23 +164,9 @@ namespace s21 {
 
         return forest;
     }
-    
-    TravelingSalesman::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(const Graph &graph) {
-        AntColonyTSM tsm;
-        
-        return tsm.solve(graph);
-    }
 
-    TravelingSalesman::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblemGenetic(const Graph &graph) {
-        GeneticTSM tsm;
-
-        return tsm.solve(graph);
-    }
-
-    TravelingSalesman::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblemBranchesAndBounds(const Graph &graph) {
-        BranchesAndBoundsTSM tsm;
-
-        return tsm.solve(graph);
+    TravelingSalesman::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(const Graph &graph, TravelingSalesman *tsm_solver) {
+        return tsm_solver->solve(graph);
     }
 
     void GraphAlgorithms::CheckVertex(const Graph &graph, int vertex, const std::string& msg) {

@@ -28,3 +28,17 @@ TEST(Graph, ExportGraphToDot) {
 
     std::filesystem::remove(export_graph_path);
 }
+
+TEST(Graph, ExportGraphAdjMatrix) {
+    std::string test_graph_path = (std::filesystem::current_path() / "assets" / "graph.txt").string();
+    std::string export_graph_path = (std::filesystem::current_path() / "assets" / "exp_adj_graph.txt").string();
+
+    s21::Graph graph;
+    graph.LoadGraphFromFile(test_graph_path);
+    graph.ExportGraphAdjMatrix(export_graph_path);
+
+    EXPECT_TRUE(std::filesystem::exists(export_graph_path));
+    EXPECT_NE(std::filesystem::file_size(export_graph_path), 0);
+
+    std::filesystem::remove(export_graph_path);
+}
