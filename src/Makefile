@@ -1,11 +1,6 @@
 PROJECTDIR = $(CURDIR)
 TEST_EXE = GraphTests
-BUILDDIR=build
-
-ifeq ($(shell uname), Darwin)
-	COMPILER21 = -DCMAKE_CXX_COMPILER="/usr/local/bin/g++"
-endif
-
+BUILDDIR = build
 
 .PHONY: tests graph.a graph_algorithms.a
 all: graph.a graph_algorithms.a install tests clean
